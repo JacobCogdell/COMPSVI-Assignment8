@@ -30,15 +30,42 @@ def bfs(graph, start, target):
     Example:
         graph = {0: [1, 2], 1: [0, 3], 2: [0], 3: [1]}
         bfs(graph, 0, 3) returns [0, 1, 3]
-    """
-    # TODO: Implement BFS
-    # Hints:
-    # - Use a queue (deque) to track nodes to visit
-    # - Track visited nodes to avoid cycles
-    # - Track parent pointers to reconstruct path
-    # - Return path from start to target as a list
-    
-    pass
+    """    
+    # Handle the Special Case Where You Start at the Target
+    if start == target:
+        return [start]
+
+    # Queue for BFS
+    queue = deque([start])
+
+    # Track visited nodes
+    visited = set([start])
+
+    # Track parents
+    parent = {start: None}
+
+    # Primary BFS Loop
+    while queue:
+        current = queue.popleft()
+
+        for neighbor in graph.get(current, []):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                parent[neighbor] = current
+                queue.append(neighbor)
+
+                # Stop early if we reached the target
+                if neighbor == target:
+                    # Reconstruct path
+                    path = [target]
+                    while parent[path[-1]] is not None:
+                        path.append(parent[path[-1]])
+                    path.reverse()
+                    return path
+
+    # No path found
+    return []
+
 
 
 # ============================================================================
@@ -60,13 +87,18 @@ def dfs(graph, start):
         graph = {0: [1, 2], 1: [0, 3], 2: [0], 3: [1], 4: [5], 5: [4]}
         dfs(graph, 0) returns {0, 1, 2, 3}
     """
-    # TODO: Implement DFS
-    # Hints:
-    # - Use recursion or a stack to explore deeply
-    # - Track visited nodes to avoid infinite loops
-    # - Return a set of all reachable user IDs
     
-    pass
+    visited = set()
+
+    # Helper function for recursive DFS
+    def explore(node):
+        visited.add(node)
+        for neighbor in graph.get(node, []):
+            if neighbor not in visited:
+                explore(neighbor)
+
+    explore(start)
+    return visited
 
 
 # ============================================================================
